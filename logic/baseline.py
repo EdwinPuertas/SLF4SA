@@ -19,7 +19,7 @@ from sklearn.metrics import classification_report, confusion_matrix, recall_scor
 from sklearn.metrics import f1_score, accuracy_score, precision_score
 from logic.classifiers import Classifiers
 from logic.text_processing import TextProcessing
-from logic.feature_extraction import FeatureExtraction
+from logic.lexical_vectorizer import LexicalVectorizer
 from root import DIR_DATA, DIR_INPUT
 
 
@@ -32,7 +32,7 @@ class Baseline(object):
         self.fold = fold
         self.classifiers = Classifiers.dict_classifiers
         self.tp = TextProcessing(lang=lang)
-        self.fe = FeatureExtraction(lang=lang, text_processing=self.tp)
+        self.lv = LexicalVectorizer(lang=lang, text_processing=self.tp)
 
     def get_data(self, file_name: str, sep: str = ','):
         try:
@@ -54,8 +54,8 @@ class Baseline(object):
         # 2. Feature extraction
         print('\t+ Get Feature')
 
-        x_train = self.fe.transform(x_train)
-        x_test = self.fe.transform(x_test)
+        x_train = self.lv.transform(x_train)
+        x_test = self.lv.transform(x_test)
 
         print('\t\t - Sample train:', sorted(Counter(y_train).items()))
         print('\t\t - Sample test:', sorted(Counter(y_test).items()))

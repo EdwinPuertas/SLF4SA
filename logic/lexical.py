@@ -39,14 +39,8 @@ lexical_es = {'first_person_singular': ['yo', 'mio', 'mi'],
                              'esposita', 'experta', 'expertas', 'funcionaria', 'hermana', 'ingeniera', 'investigadora',
                              'jefa', 'jugadora', 'madre', 'mama', 'medica', 'muchacha', 'muchachas', 'mujer', 'niñas',
                              'novia', 'novicia', 'hija', 'prima', 'pequeña', 'pequeñas', 'profesora', 'secretaria',
-                             'señora', 'socia', 'tutora', 'mami', 'tia', 'nieta'],
-              'hate': ['animosidad', 'antagonismo', 'enemistad', 'odio', 'horror', 'hostilidad', 'aborrecimiento',
-                       'dolor', 'rencor', 'resentimiento', 'venganza', 'veneno', 'aborrecimiento', 'abominación ',
-                       'anatema', 'animus', 'antipatía', 'aversión', 'molestar', 'bugbear', 'detestación ', 'disgusto',
-                       'execración', 'escarcha', 'agravio', 'queja', 'irritante', 'malevolencia', 'malignidad',
-                       'molestia', 'objeción', 'odio', 'irritación', 'repugnancia', 'repulsión', 'repulsión',
-                       'desprecio', 'despecho', 'problemas', 'bestia negra', 'mala voluntad', 'desagradable',
-                       'mirada desagradable', 'ningún amor perdido']}
+                             'señora', 'socia', 'tutora', 'mami', 'tia', 'nieta']
+              }
 
 lexical_en = {'first_person_singular': ['i', 'me', 'my', 'mine', 'myself'],
               'second_person_singular': ['you', 'your', 'yours', 'yourself'],
@@ -119,10 +113,5 @@ lexical_en = {'first_person_singular': ['i', 'me', 'my', 'mine', 'myself'],
                              'doctor', 'employee', 'entrepreneur', 'wife', 'expert', 'officer', 'sister', 'engineer',
                              'researcher', 'boss', 'player', 'mother', 'mother', 'doctor', 'girl', 'girls', 'woman',
                              'girls', 'bride', 'novice', 'daughter', 'cousin', 'little', 'little', 'teacher',
-                             'secretary', 'lady', 'partner', 'tutor', 'mommy', 'aunt', 'granddaughter'],
-              'hate': ['animosity', 'antagonism', 'enmity', 'hatred', 'horror', 'hostility', 'loathing', 'pain',
-                       'rancor', 'resentment', 'revenge', 'venom', 'abhorrence', 'abomination', 'anathema', 'animus',
-                       'antipathy', 'aversion', 'bother', 'bugbear', 'detestation', 'disgust', 'execration', 'frost',
-                       'grievance', 'gripe', 'irritant', 'malevolence', 'malignity', 'nuisance', 'objection', 'odium',
-                       'rankling', 'repugnance', 'repulsion','revulsion', 'scorn', 'spite', 'trouble', 'black beast',
-                       'bête noire', 'ill will', 'mislike', 'nasty look', 'no love lost']}
+                             'secretary', 'lady', 'partner', 'tutor', 'mommy', 'aunt', 'granddaughter']
+              }
