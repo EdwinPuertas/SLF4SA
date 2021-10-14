@@ -4,6 +4,7 @@ import time
 from collections import Counter
 
 import pandas as pd
+from sklearn.pipeline import FeatureUnion
 from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
 import numpy as np
@@ -54,8 +55,20 @@ class Baseline(object):
         # 2. Feature extraction
         print('\t+ Get Feature')
 
-        x_train = self.lv.transform(x_train)
-        x_test = self.lv.transform(x_test)
+        bow_vector = CountVectorizer(analyzer='word', ngram_range=(1, 3))
+
+        preprocessor = FeatureUnion([
+            ('bow_vector', bow_vector),
+            ('lex_vector', self.lv)
+        ])
+
+        preprocessor.fit(x_train)
+
+        x_train = preprocessor.transform(x_train)
+        x_test = preprocessor.transform(x_test)
+
+        #x_train = self.lv.transform(x_train)
+        #x_test = self.lv.transform(x_test)
 
         print('\t\t - Sample train:', sorted(Counter(y_train).items()))
         print('\t\t - Sample test:', sorted(Counter(y_test).items()))
