@@ -31,7 +31,7 @@ class LexicalVectorizer(BaseEstimator, TransformerMixin):
         try:
             lexical = self.lexical
             tags = ('mention', 'url', 'hashtag', 'emoji', 'rt')
-            features = np.zeros((len(X), 26), dtype=np.float)
+            features = np.zeros((len(X), 27), dtype=np.float)
             for row, doc in enumerate(X):
                 doc = doc.lower()
                 tokens_text = TextProcessing.tokenizer(doc)
@@ -76,8 +76,24 @@ class LexicalVectorizer(BaseEstimator, TransformerMixin):
                 features[row, 24] = sum(1 for word in tokens_text if word in lexical['who_male'])
                 features[row, 25] = sum(1 for word in tokens_text if word in lexical['who_female'])
 
+                features[row, 26] = self.lexical_diversity(doc)
+
                 features[row, :] /= len(tokens_text)
             return features
         except Exception as e:
             print('Error get_lexical_features: {0}'.format(e))
 
+    @staticmethod
+    def lexical_diversity(text):
+        result = None
+        try:
+            text_out = re.sub(r"[\U00010000-\U0010ffff]", '', text)
+            text_out = re.sub(
+                r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+'
+                r'|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))',
+                '', text_out)
+            text_out = text_out.lower()
+            result = round((len(set(text_out)) / len(text_out)), 4)
+        except Exception as e:
+            print('Error lexical_diversity: {0}'.format(e))
+        return result

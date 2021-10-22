@@ -2,7 +2,6 @@ import datetime
 import pickle
 import time
 from collections import Counter
-
 import pandas as pd
 from sklearn.pipeline import FeatureUnion
 from sklearn.preprocessing import LabelEncoder
@@ -67,8 +66,6 @@ class Baseline(object):
         x_train = preprocessor.transform(x_train)
         x_test = preprocessor.transform(x_test)
 
-        #x_train = self.lv.transform(x_train)
-        #x_test = self.lv.transform(x_test)
 
         print('\t\t - Sample train:', sorted(Counter(y_train).items()))
         print('\t\t - Sample test:', sorted(Counter(y_test).items()))
