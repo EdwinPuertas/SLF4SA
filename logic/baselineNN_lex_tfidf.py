@@ -2,7 +2,9 @@ from collections import Counter
 import datetime
 import pandas as pd
 import tensorflow as tf
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics import accuracy_score, classification_report
+from sklearn.pipeline import FeatureUnion
 from tensorflow import keras
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import numpy as np
@@ -43,8 +45,17 @@ class BaselineNN(object):
         # 2. Feature extraction
         print('\t+ Get Feature')
 
-        x_train = self.lv.transform(x_train)
-        x_test = self.lv.transform(x_test)
+        tfidf_vector = TfidfVectorizer(max_features=1000, min_df=10, max_df=0.9, ngram_range=(1, 2))
+
+        preprocessor = FeatureUnion([
+            ('tfidf_vector', tfidf_vector),
+            ('lex_vector', self.lv)
+        ])
+
+        preprocessor.fit(x_train)
+
+        x_train = preprocessor.transform(x_train)
+        x_test = preprocessor.transform(x_test)
 
         print('\t\t - Sample train:', sorted(Counter(y_train).items()))
         print('\t\t - Sample test:', sorted(Counter(y_test).items()))
@@ -62,17 +73,12 @@ class BaselineNN(object):
 
         shape = X_train.shape[1:]
 
-        scaler = StandardScaler()
-        X_train = scaler.fit_transform(X_train)
-        X_valid = scaler.transform(X_valid)
-        X_test = scaler.transform(x_test)
-
         # 4. NN Architecture
 
         model = keras.models.Sequential()
         model.add(keras.layers.Input(shape=shape))
-        model.add(keras.layers.Dense(25, activation="relu"))
-        model.add(keras.layers.Dense(15, activation="relu"))
+        model.add(keras.layers.Dense(800, activation="selu"))
+        model.add(keras.layers.Dense(400, activation="selu"))
         model.add(keras.layers.Dense(4, activation="softmax"))
 
         keras.backend.clear_session()
@@ -81,25 +87,26 @@ class BaselineNN(object):
 
         model = keras.models.Sequential([
             keras.layers.Input(shape=shape),
-            keras.layers.Dense(25, activation="relu"),
-            keras.layers.Dense(15, activation="relu"),
+            keras.layers.Dense(800, activation="selu"),
+            keras.layers.Dense(400, activation="selu"),
             keras.layers.Dense(4, activation="softmax")
         ])
 
         model.summary()
+
         model.compile(loss="sparse_categorical_crossentropy", optimizer="sgd", metrics=["accuracy"])
 
         print('\t+ Training...')
 
-        history = model.fit(X_train, y_train, epochs=100, validation_data=(X_valid, y_valid))
+        history = model.fit(X_train, y_train, epochs=50, validation_data=(X_valid, y_valid))
 
         pd.DataFrame(history.history).plot(figsize=(10, 5))
         plt.grid(True)
         plt.gca().set_ylim(0, 2)
-        plt.savefig('{0}{1}_{2}'.format(DIR_RESULTS, "baselineNN_lexical", date_file))
+        plt.savefig('{0}{1}_{2}'.format(DIR_RESULTS, "baselineNN_lexical_tfidf", date_file))
         plt.show()
 
-        score = model.evaluate(X_test, y_test, verbose=1)
+        score = model.evaluate(x_test, y_test, verbose=1)
 
         print("Test Score:", score[0])
         print("Test Accuracy:", score[1])

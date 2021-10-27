@@ -14,7 +14,6 @@ class Classifiers(object):
     dict_classifiers = dict()
     dict_classifiers['SVM'] = svm.SVC(kernel='poly', degree=3, C=1)
     dict_classifiers['LogisticRegression'] = LogisticRegression(multi_class="multinomial", solver="lbfgs")
-    #dict_classifiers['NaiveBayes'] = GaussianNB()
     dict_classifiers['RandomForest'] = RandomForestClassifier(n_jobs=cores)
 
 

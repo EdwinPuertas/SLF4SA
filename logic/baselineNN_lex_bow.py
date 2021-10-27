@@ -6,15 +6,17 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.pipeline import FeatureUnion
 from tensorflow import keras
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+
 import numpy as np
 from tqdm import tqdm
 from imblearn.over_sampling import RandomOverSampler
+
+from logic.Utils import Utils
 from logic.classifiers import Classifiers
 from logic.text_processing import TextProcessing
 from logic.lexical_vectorizer import LexicalVectorizer
 from sklearn.model_selection import train_test_split, ShuffleSplit
-from root import DIR_INPUT, DIR_RESULTS
+from root import DIR_RESULTS
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 mpl.rc('axes', labelsize=14)
@@ -30,17 +32,7 @@ class BaselineNN(object):
         self.classifiers = Classifiers.dict_classifiers
         self.tp = TextProcessing(lang=lang)
         self.lv = LexicalVectorizer(lang=lang, text_processing=self.tp)
-
-    def get_data(self, file_name: str, sep: str = ','):
-        try:
-            le = LabelEncoder()
-            data = pd.read_csv('{0}{1}.csv'.format(DIR_INPUT, file_name), sep=sep)
-            x = [self.tp.transformer(row) for row in data['content'].tolist()]
-            y = le.fit_transform(data['sentiment/polarity/value'])
-            print('\t\t - Dataset size :(x: {} , y: {})'.format(len(x), len(y)))
-            return x, y
-        except Exception as e:
-            print('Error get_data: {0}'.format(e))
+        self.ut = Utils(lang=lang, text_processing=self.tp)
 
     def run(self, file_name_train: str, file_name_test: str):
 
@@ -48,9 +40,9 @@ class BaselineNN(object):
 
         # 1. import training and test data
         print('\t+ Import training...')
-        x_train, y_train = self.get_data(file_name=file_name_train)
+        x_train, y_train = self.ut.get_data(file_name=file_name_train)
         print('\t+ Import test...')
-        x_test, y_test = self.get_data(file_name=file_name_test)
+        x_test, y_test = self.ut.get_data(file_name=file_name_test)
         # 2. Feature extraction
         print('\t+ Get Feature')
 
@@ -117,7 +109,7 @@ class BaselineNN(object):
         pd.DataFrame(history.history).plot(figsize=(10, 5))
         plt.grid(True)
         plt.gca().set_ylim(0, 2)
-        plt.savefig('{0}{1}_{2}'.format(DIR_RESULTS, "keras_learning_curves_plot", date_file))
+        plt.savefig('{0}{1}_{2}'.format(DIR_RESULTS, "baselineNN_lexical_bow", date_file))
         plt.show()
 
         score = model.evaluate(x_test, y_test, verbose=1)

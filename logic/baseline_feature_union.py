@@ -17,13 +17,15 @@ from sklearn.model_selection import train_test_split, cross_val_score, ShuffleSp
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import classification_report, confusion_matrix, recall_score, log_loss
 from sklearn.metrics import f1_score, accuracy_score, precision_score
+
+from logic.Utils import Utils
 from logic.classifiers import Classifiers
 from logic.text_processing import TextProcessing
 from logic.lexical_vectorizer import LexicalVectorizer
 from root import DIR_DATA, DIR_INPUT
 
 
-class Baseline(object):
+class BaselineFeatureUnion(object):
 
     def __init__(self, lang: str = 'es', iteration: int = 10, fold: int = 10):
         print('{0}'.format(type(self).__name__))
@@ -33,24 +35,14 @@ class Baseline(object):
         self.classifiers = Classifiers.dict_classifiers
         self.tp = TextProcessing(lang=lang)
         self.lv = LexicalVectorizer(lang=lang, text_processing=self.tp)
-
-    def get_data(self, file_name: str, sep: str = ','):
-        try:
-            le = LabelEncoder()
-            data = pd.read_csv('{0}{1}.csv'.format(DIR_INPUT, file_name), sep=sep)
-            x = [self.tp.transformer(row) for row in data['content'].tolist()]
-            y = le.fit_transform(data['sentiment/polarity/value'])
-            print('\t\t - Dataset size :(x: {} , y: {})'.format(len(x), len(y)))
-            return x, y
-        except Exception as e:
-            print('Error get_data: {0}'.format(e))
+        self.ut = Utils(lang=lang, text_processing=self.tp)
 
     def run(self, file_name_train: str, file_name_test: str):
         # 1. import training and test data
         print('\t+ Import training...')
-        x_train, y_train = self.get_data(file_name=file_name_train)
+        x_train, y_train = self.ut.get_data(file_name=file_name_train)
         print('\t+ Import test...')
-        x_test, y_test = self.get_data(file_name=file_name_test)
+        x_test, y_test = self.ut.get_data(file_name=file_name_test)
         # 2. Feature extraction
         print('\t+ Get Feature')
 
@@ -65,7 +57,6 @@ class Baseline(object):
 
         x_train = preprocessor.transform(x_train)
         x_test = preprocessor.transform(x_test)
-
 
         print('\t\t - Sample train:', sorted(Counter(y_train).items()))
         print('\t\t - Sample test:', sorted(Counter(y_test).items()))
@@ -122,5 +113,5 @@ class Baseline(object):
 
 
 if __name__ == '__main__':
-    base = Baseline(lang='es', iteration=10, fold=10)
+    base = BaselineFeatureUnion(lang='es', iteration=10, fold=10)
     base.run(file_name_train='tass2018_es_train', file_name_test='tass2018_es_development')

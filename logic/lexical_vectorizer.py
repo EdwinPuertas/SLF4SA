@@ -1,15 +1,9 @@
 import re
-import nltk
-from typing import List
-import pandas as pd
-from tqdm import tqdm
 import numpy as np
 from scipy.stats import kurtosis, skew
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.feature_extraction.text import CountVectorizer
 from logic.text_processing import TextProcessing
 from logic.lexical import lexical_es, lexical_en
-from nltk.corpus import stopwords
 
 
 class LexicalVectorizer(BaseEstimator, TransformerMixin):
