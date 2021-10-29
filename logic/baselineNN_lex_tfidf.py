@@ -122,6 +122,7 @@ class BaselineNN(object):
         print('Accuracy: {0}'.format(round(np.mean(accuracy_predict) * 100, 2)))
         print(classification_report(y_test, y_predict))
 
+
 if __name__ == '__main__':
     base = BaselineNN(lang='es')
     base.run(file_name_train='tass2018_es_train', file_name_test='tass2018_es_development')

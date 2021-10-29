@@ -1,3 +1,4 @@
+import csv
 import datetime
 import pickle
 import time
@@ -22,7 +23,9 @@ from logic.Utils import Utils
 from logic.classifiers import Classifiers
 from logic.text_processing import TextProcessing
 from logic.lexical_vectorizer import LexicalVectorizer
-from root import DIR_DATA, DIR_INPUT
+from root import DIR_RESULTS
+
+fieldnames = ('model_name', 'classifier', 'accuracy_train', 'accuracy_test', 'classification_report')
 
 
 class Baseline(object):
@@ -63,44 +66,50 @@ class Baseline(object):
         print('\t\t - test:', sorted(Counter(y_test).items()))
 
         print('\t+ Training...')
-        result_train = {}
-        result_test = {}
-        for clf_name, clf in self.classifiers.items():
-            accuracies_scores = []
-            for train_index, test_index in k_fold.split(x_train, y_train):
-                data_train = x_train[train_index]
-                target_train = y_train[train_index]
+        result = {}
+        file_result = DIR_RESULTS + "slf4sa_report.csv"
+        with open(file_result, 'w') as out_csv:
+            writer = csv.DictWriter(out_csv, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
+            writer.writeheader()
+            for clf_name, clf in self.classifiers.items():
+                result['model_name'] = 'baseline_lexical'
+                result['classifier'] = clf_name
+                accuracies_scores = []
+                for train_index, test_index in k_fold.split(x_train, y_train):
+                    data_train = x_train[train_index]
+                    target_train = y_train[train_index]
 
-                data_test = x_train[test_index]
-                target_test = y_train[test_index]
+                    data_test = x_train[test_index]
+                    target_test = y_train[test_index]
 
-                clf.fit(data_train, target_train)
-                predict = clf.predict(data_test)
-                # Accuracy
-                accuracy = accuracy_score(target_test, predict)
-                accuracies_scores.append(accuracy)
+                    clf.fit(data_train, target_train)
+                    predict = clf.predict(data_test)
+                    # Accuracy
+                    accuracy = accuracy_score(target_test, predict)
+                    accuracies_scores.append(accuracy)
 
-            average_accuracy = round(np.mean(accuracies_scores) * 100, 2)
-            result_train[clf_name] = average_accuracy
+                average_accuracy = round(np.mean(accuracies_scores) * 100, 2)
+                result['accuracy_train'] = average_accuracy
 
-            y_predict = []
-            for features in x_test:
-                features = features.reshape(1, -1)
-                value = clf.predict(features)[0]
-                y_predict.append(value)
+                y_predict = []
+                for features in x_test:
+                    features = features.reshape(1, -1)
+                    value = clf.predict(features)[0]
+                    y_predict.append(value)
 
-            accuracy_predict = accuracy_score(y_test, y_predict)
-            result_test[clf_name] = {'Accuracy': round(np.mean(accuracy_predict) * 100, 2),
-                                     'Classification Report\n': classification_report(y_test, y_predict)}
+                accuracy_predict = accuracy_score(y_test, y_predict)
+                result['accuracy_test'] = round(np.mean(accuracy_predict) * 100, 2)
+                result['classification_report'] = classification_report(y_test, y_predict)
 
-        for k, v in result_train.items():
-            print('\t\t - {0}: {1}'.format(k, v))
-
-        print('\t+ Evaluation...')
-        for k, v in result_test.items():
-            print('\t\t - {0}'.format(k))
-            for kk, vv in v.items():
-                print('\t\t\t- {0}: {1}'.format(kk, vv))
+                writer.writerow(result)
+                out_csv.flush()
+                print('\t+ Evaluation...')
+                for k, v in result.items():
+                    if k == 'classification_report':
+                        print('\t\t - {0}:'.format(k))
+                        print(v)
+                    else:
+                        print('\t\t - {0}: {1}'.format(k, v))
 
 
 if __name__ == '__main__':
