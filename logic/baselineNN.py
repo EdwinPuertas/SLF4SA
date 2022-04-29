@@ -9,7 +9,7 @@ import numpy as np
 from tqdm import tqdm
 from imblearn.over_sampling import RandomOverSampler
 
-from logic.Utils import Utils
+from logic.utils import Utils
 from logic.classifiers import Classifiers
 from logic.text_processing import TextProcessing
 from logic.lexical_vectorizer import LexicalVectorizer
@@ -117,4 +117,4 @@ class BaselineNN(object):
 
 if __name__ == '__main__':
     base = BaselineNN(lang='es')
-    base.run(file_name_train='tass2018_es_train', file_name_test='tass2018_es_development')
+    base.run(file_name_train='tass2020_emotion_train', file_name_test='tass2020_emotion_dev')

@@ -18,7 +18,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import classification_report, confusion_matrix, recall_score, log_loss
 from sklearn.metrics import f1_score, accuracy_score, precision_score
 
-from logic.Utils import Utils
+from logic.utils import Utils
 from logic.classifiers import Classifiers
 from logic.text_processing import TextProcessing
 from logic.lexical_vectorizer import LexicalVectorizer

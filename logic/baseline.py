@@ -3,7 +3,6 @@ import datetime
 import pickle
 import time
 from collections import Counter
-
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
@@ -19,7 +18,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import classification_report, confusion_matrix, recall_score, log_loss
 from sklearn.metrics import f1_score, accuracy_score, precision_score
 
-from logic.Utils import Utils
+from logic.utils import Utils
 from logic.classifiers import Classifiers
 from logic.text_processing import TextProcessing
 from logic.lexical_vectorizer import LexicalVectorizer
@@ -47,13 +46,13 @@ class Baseline(object):
         print('\t+ Import test...')
         x_test, y_test = self.ut.get_data(file_name=file_name_test)
         # 2. Feature extraction
-        print('\t+ Get Feature')
+        print('\t+ Samples data')
 
         x_train = self.lv.transform(x_train)
         x_test = self.lv.transform(x_test)
 
-        print('\t\t - Sample train:', sorted(Counter(y_train).items()))
-        print('\t\t - Sample test:', sorted(Counter(y_test).items()))
+        print('\t\t - train:', sorted(Counter(y_train).items()))
+        print('\t\t - test:', sorted(Counter(y_test).items()))
 
         # 3. Over Sampling
         k_fold = ShuffleSplit(n_splits=self.fold, test_size=0.25, random_state=42)
@@ -114,4 +113,4 @@ class Baseline(object):
 
 if __name__ == '__main__':
     base = Baseline(lang='es', iteration=10, fold=10)
-    base.run(file_name_train='tass2018_es_train', file_name_test='tass2018_es_development')
+    base.run(file_name_train='tass2020_emotion_train', file_name_test='tass2020_emotion_dev')

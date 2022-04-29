@@ -20,8 +20,9 @@ class Utils(object):
         try:
             le = LabelEncoder()
             data = pd.read_csv('{0}{1}.csv'.format(DIR_INPUT, file_name), sep=sep)
-            x = [self.tp.transformer(row) for row in data['content'].tolist()]
-            y = le.fit_transform(data['sentiment/polarity/value'])
+            x = [self.tp.transformer(row) for row in data['tweet'].tolist()]
+            # y = le.fit_transform(data['sentiment/polarity/value'])
+            y = data['label']
             print('\t\t - Dataset size :(x: {} , y: {})'.format(len(x), len(y)))
             return x, y
         except Exception as e:

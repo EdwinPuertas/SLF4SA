@@ -13,8 +13,8 @@ class Classifiers(object):
     cores = multiprocessing.cpu_count() - 1
     dict_classifiers = dict()
     dict_classifiers['SVM'] = svm.SVC(kernel='poly', degree=3, C=1)
-    dict_classifiers['LogisticRegression'] = LogisticRegression(multi_class="multinomial", solver="lbfgs")
     dict_classifiers['RandomForest'] = RandomForestClassifier(n_jobs=cores)
-
+    dict_classifiers['DecisionTreeClassifier'] = DecisionTreeClassifier(max_depth=4)
+    dict_classifiers['NaiveBayes'] = GaussianNB()
 
 
