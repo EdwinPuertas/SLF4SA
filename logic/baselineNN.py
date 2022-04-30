@@ -71,9 +71,9 @@ class BaselineNN(object):
 
         model = keras.models.Sequential()
         model.add(keras.layers.Input(shape=shape))
-        model.add(keras.layers.Dense(25, activation="relu"))
+        model.add(keras.layers.Dense(27, activation="relu"))
         model.add(keras.layers.Dense(15, activation="relu"))
-        model.add(keras.layers.Dense(4, activation="softmax"))
+        model.add(keras.layers.Dense(7, activation="softmax"))
 
         keras.backend.clear_session()
         np.random.seed(42)
@@ -81,9 +81,9 @@ class BaselineNN(object):
 
         model = keras.models.Sequential([
             keras.layers.Input(shape=shape),
-            keras.layers.Dense(25, activation="relu"),
+            keras.layers.Dense(27, activation="relu"),
             keras.layers.Dense(15, activation="relu"),
-            keras.layers.Dense(4, activation="softmax")
+            keras.layers.Dense(7, activation="softmax")
         ])
 
         model.summary()

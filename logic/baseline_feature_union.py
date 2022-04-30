@@ -114,4 +114,4 @@ class BaselineFeatureUnion(object):
 
 if __name__ == '__main__':
     base = BaselineFeatureUnion(lang='es', iteration=10, fold=10)
-    base.run(file_name_train='tass2018_es_train', file_name_test='tass2018_es_development')
+    base.run(file_name_train='tass2020_emotion_train', file_name_test='tass2020_emotion_dev')

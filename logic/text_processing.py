@@ -119,46 +119,6 @@ class TextProcessing(object):
         except Exception as e:
             print('Error make_ngrams: {0}'.format(e))
 
-    @staticmethod
-    def get_URL_title(text: str):
-        result = ''
-        pattern = r'\([0-9]*:[0-9]*\) => '  # Definimos los patrones a buscar y variables
-        patern2 = r'\[|\]'  # con las que manipularemos los datos
-        patern3 = r'[\-\?\:\;\$\%\^\&\*\(\)\|\!\`\'\"\,\<\.\>]'
-        URL_cont = ''
-
-        try:
-            text = TextProcessing.transformer(text)
-            urx = re.sub(patern2, '', re.sub(pattern, '', str(text.urls)))
-            if urx != "None":  # Se leeran los urls para obtener el titulo de las paginas
-                if "," in urx:  # aqui se revisa si existe mas de 1 url
-                    tado = urx.split(",")
-                else:
-                    tado = urx + "," + "https://www.google.com"
-                    tado = tado.split(",")  # en caso contrario se agrega una direccion default
-                for cor in tado:
-                    link = cor  # para evitar errores en este ciclo
-                    reqs = requests.get(link)
-                    soup = BeautifulSoup(reqs.text, 'html.parser')
-                    for title in soup.find_all('title'):
-                        if title.getText() == "Google":
-                            URL_cont += "Null"  # aqui se elimina la pagina default
-                        elif title.getText() != "Página no encontrada":
-                            var = title.getText()  # en caso de obtener el titulo de la pagina
-                            temp0 = re.sub(patern3, '', var)  # aqui normalizaremos el
-                            temp0 = temp0.lower()
-                            URL_cont += "" + str(temp0)  # Se guarda en el contenido
-                        else:
-                            URL_cont += "Null"  # si la pagina no es encontrada
-                URL_cont += "~"
-            elif urx == "None":
-                URL_cont += "Null" + "~"  # En caso de no haber urls , se agrega null
-                result = URL_cont.split("~")
-        except Exception as e:
-            print('Error delete_special_patterns: {0}'.format(e))
-        return result
-
-
 if __name__ == '__main__':
     tp_es = TextProcessing(lang='es')
     result_es = tp_es.nlp(
