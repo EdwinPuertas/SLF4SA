@@ -11,3 +11,8 @@ spacy~=3.2.4
 requests~=2.27.1
 beautifulsoup4~=4.11.1
 scipy~=1.7.3
+spacy-syllables~=3.0.1
+
+# Please install theses model after intall spacy
+# python -m spacy download en_core_web_sm
+# python -m spacy download es_core_news_sm
